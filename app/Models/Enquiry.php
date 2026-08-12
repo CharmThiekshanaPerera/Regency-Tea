@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Enquiry extends Model
+{
+    protected $guarded = [];
+
+    protected function casts(): array
+    {
+        return [
+            'products'   => 'array',
+            'handled_at' => 'datetime',
+        ];
+    }
+}

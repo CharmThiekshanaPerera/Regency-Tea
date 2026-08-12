@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Alpine sets x-cloak until it initialises; without this, collapsed tab
+   panels flash open on first paint. */
+[x-cloak] { display: none !important; }
+
+@layer base {
+    :root { --brand: 6 78 59; } /* emerald-900 */
+    html { scroll-behavior: smooth; }
+    :focus-visible {
+        outline: 2px solid rgb(var(--brand));
+        outline-offset: 2px;
+    }
+}
+
+@layer utilities {
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}
