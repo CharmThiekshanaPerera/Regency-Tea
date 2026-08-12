@@ -4,9 +4,11 @@ namespace App\Http\Middleware;
 
 use App\Models\Redirect;
 use Closure;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Serves the 666 legacy WordPress URLs captured in discovery/url-map.csv.
@@ -16,7 +18,13 @@ class HandleLegacyRedirects
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $response = $next($request);
+        try {
+            $response = $next($request);
+        } catch (NotFoundHttpException|ModelNotFoundException $e) {
+            // Unmatched routes and failed route-model bindings throw rather than
+            // returning a 404 response, which would otherwise bypass this middleware.
+            $response = response('', 404);
+        }
 
         if ($response->getStatusCode() !== 404) {
             return $response;

@@ -23,3 +23,39 @@
         overflow: hidden;
     }
 }
+
+/* ------------------------------------------------------------------
+ * Homepage motion — slow background zoom on hero slides, and a
+ * fade-up reveal applied to sections/cards as they enter the
+ * viewport (see initScrollReveal() in app.js).
+ * ---------------------------------------------------------------- */
+@keyframes kenburns {
+    0%   { transform: scale(1); }
+    100% { transform: scale(1.12); }
+}
+.animate-kenburns {
+    animation: kenburns 20s ease-in-out infinite alternate;
+}
+
+/* Only hide [data-reveal] content once JS has confirmed it can reveal it
+   again — see the inline script in layouts/app.blade.php. Without this,
+   a slow or blocked script would leave the content invisible forever. */
+.js [data-reveal] {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    transition-delay: var(--reveal-delay, 0ms);
+}
+[data-reveal].revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .animate-kenburns { animation: none; }
+    .js [data-reveal] {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}

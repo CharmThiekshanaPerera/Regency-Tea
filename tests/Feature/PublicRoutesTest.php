@@ -72,11 +72,11 @@ class PublicRoutesTest extends TestCase
     public function test_contact_form_validates_and_stores(): void
     {
         $this->post('/contact', [
-            'name' => 'Buyer', 'email' => 'buyer@example.com',
+            'name' => 'Buyer', 'email' => 'buyer@gmail.com',
             'message' => 'We would like a quotation for bulk Ceylon black tea.',
         ])->assertRedirect();
 
-        $this->assertDatabaseHas('enquiries', ['email' => 'buyer@example.com']);
+        $this->assertDatabaseHas('enquiries', ['email' => 'buyer@gmail.com']);
     }
 
     public function test_contact_form_rejects_a_short_message(): void

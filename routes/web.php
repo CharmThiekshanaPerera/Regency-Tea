@@ -55,3 +55,7 @@ Route::get('/search', [CatalogueController::class, 'search'])->name('search');
 if (config('regency.commerce_enabled')) {
     require __DIR__.'/commerce.php';
 }
+
+// Catches every otherwise-unmatched URI so it flows through the 'web' middleware
+// group (and therefore HandleLegacyRedirects) instead of 404ing before routing.
+Route::fallback(fn () => abort(404));

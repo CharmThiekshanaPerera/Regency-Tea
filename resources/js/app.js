@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     initHero();
+    initScrollReveal();
 });
 
 /* ------------------------------------------------------------------
@@ -61,4 +62,57 @@ function initHero() {
     // Respect users who asked for reduced motion.
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) start();
     go(0);
+}
+
+/* ------------------------------------------------------------------
+ * Scroll reveal — fades/slides [data-reveal] elements in as they
+ * enter the viewport, and counts up any [data-count-to] number
+ * inside them. Falls back to fully-visible, no counting, if the
+ * browser lacks IntersectionObserver or the user prefers less motion.
+ * ---------------------------------------------------------------- */
+function initScrollReveal() {
+    const els = [...document.querySelectorAll('[data-reveal]')];
+    if (!els.length) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const reveal = (el) => {
+        el.classList.add('revealed');
+        el.querySelectorAll('[data-count-to]').forEach(animateCount);
+    };
+
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+        els.forEach(reveal);
+        return;
+    }
+
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                reveal(entry.target);
+                io.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    els.forEach((el) => io.observe(el));
+}
+
+function animateCount(el) {
+    const target = parseFloat(el.dataset.countTo);
+    if (Number.isNaN(target) || el.dataset.counted) return;
+    el.dataset.counted = '1';
+
+    const suffix = el.dataset.countSuffix || '';
+    const duration = 1200;
+    const start = performance.now();
+
+    const tick = (now) => {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(target * eased) + suffix;
+        if (progress < 1) requestAnimationFrame(tick);
+    };
+
+    requestAnimationFrame(tick);
 }

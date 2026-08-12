@@ -15,14 +15,32 @@ class PageController extends Controller
 {
     public function home(): View
     {
+        $groups = ProductGroup::with('categories')->orderBy('sort')->get();
+
+        $groups->each(function (ProductGroup $group) {
+            $categoryIds = $group->categories->pluck('id');
+
+            $group->cover_image = Product::published()
+                ->whereNotNull('primary_image_path')
+                ->whereHas('categories', fn ($q) => $q->whereIn('categories.id', $categoryIds))
+                ->orderByDesc('published_at')
+                ->value('primary_image_path');
+        });
+
         return view('pages.home', [
             'page'        => Page::published()->where('slug', 'home')->first(),
             'slides'      => Slider::where('slug', 'home-hero')->first()?->slides ?? collect(),
             'brands'      => Brand::withCount('products')->orderBy('sort')->get(),
             'newArrivals' => Product::newArrivals()->with(['brand', 'variants'])
                                     ->latest('published_at')->take(8)->get(),
-            'groups'      => ProductGroup::with('categories')->orderBy('sort')->get(),
+            'groups'      => $groups,
             'latestPosts' => Post::published()->latest('published_at')->take(3)->get(),
+            'stats'       => [
+                'years'     => now()->year - 1997,
+                'countries' => 25,
+                'brands'    => Brand::count(),
+                'products'  => Product::published()->count(),
+            ],
         ]);
     }
 

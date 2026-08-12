@@ -17,7 +17,7 @@ class Post extends Model
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(PostCategory::class);
+        return $this->belongsToMany(PostCategory::class, 'post_category_post');
     }
 
     public function scopePublished(Builder $q): Builder
