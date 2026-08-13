@@ -32,8 +32,13 @@ class MenuItemResource extends Resource
             Forms\Components\TextInput::make('label')->required(),
             Forms\Components\TextInput::make('url')->required()
                 ->helperText('Relative paths like /about are preferred over absolute URLs.'),
-            Forms\Components\Select::make('parent_id')->relationship('children', 'label')
-                ->label('Parent item')->searchable(),
+            Forms\Components\Select::make('parent_id')
+                ->label('Parent item')
+                ->options(fn (?MenuItem $record) => MenuItem::query()
+                    ->when($record, fn ($q) => $q->whereKeyNot($record->id))
+                    ->orderBy('label')
+                    ->pluck('label', 'id'))
+                ->searchable(),
             Forms\Components\Toggle::make('is_active')->default(true),
         ])->columns(2);
     }

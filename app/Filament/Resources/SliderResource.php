@@ -32,10 +32,11 @@ class SliderResource extends Resource
             Forms\Components\Toggle::make('is_active')->default(true),
 
             Forms\Components\Repeater::make('slides')
-                ->relationship()
+                ->relationship('allSlides')
+                ->label('Slides')
                 ->schema([
                     Forms\Components\FileUpload::make('image_path')->image()
-                        ->directory('media/slides')->columnSpanFull(),
+                        ->disk('media')->directory('slides')->columnSpanFull(),
                     Forms\Components\TextInput::make('subheading'),
                     Forms\Components\TextInput::make('heading'),
                     Forms\Components\Textarea::make('body')->columnSpanFull(),
@@ -54,7 +55,7 @@ class SliderResource extends Resource
         return $table->columns([
             Tables\Columns\TextColumn::make('name')->searchable(),
             Tables\Columns\TextColumn::make('slug')->badge()->color('gray'),
-            Tables\Columns\TextColumn::make('slides_count')->counts('slides')->label('Slides'),
+            Tables\Columns\TextColumn::make('all_slides_count')->counts('allSlides')->label('Slides'),
             Tables\Columns\IconColumn::make('is_active')->boolean(),
         ])->actions([Tables\Actions\EditAction::make()]);
     }

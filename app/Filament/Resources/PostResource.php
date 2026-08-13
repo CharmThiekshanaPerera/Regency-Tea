@@ -32,7 +32,7 @@ class PostResource extends Resource
                 ->multiple()->preload(),
             Forms\Components\DateTimePicker::make('published_at')->label('Publish date'),
             Forms\Components\FileUpload::make('featured_image_path')->image()
-                ->directory('media/posts')->columnSpanFull(),
+                ->disk('media')->directory('posts')->columnSpanFull(),
             Forms\Components\Textarea::make('excerpt')->rows(3)->columnSpanFull(),
             Forms\Components\RichEditor::make('body')->columnSpanFull(),
             Forms\Components\TextInput::make('meta_title')->maxLength(70),
@@ -45,7 +45,7 @@ class PostResource extends Resource
         return $table
             ->defaultSort('published_at', 'desc')
             ->columns([
-                Tables\Columns\ImageColumn::make('featured_image_path')->label(''),
+                Tables\Columns\ImageColumn::make('featured_image_path')->label('')->disk('media'),
                 Tables\Columns\TextColumn::make('title')->searchable()->limit(60)->wrap(),
                 Tables\Columns\TextColumn::make('categories.name')->badge(),
                 Tables\Columns\TextColumn::make('published_at')->date('j M Y')->sortable(),

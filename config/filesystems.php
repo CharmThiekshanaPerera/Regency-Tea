@@ -47,6 +47,19 @@ return [
             'report' => false,
         ],
 
+        // Backs every admin FileUpload/ImageColumn. Points straight at public/media —
+        // the same directory App\Support\Media serves the front end from — so uploads
+        // need no storage:link symlink and previews resolve for both new uploads and
+        // the paths imported from WordPress. See App\Support\Media for the rationale.
+        'media' => [
+            'driver' => 'local',
+            'root' => public_path('media'),
+            'url' => env('APP_URL').'/media',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

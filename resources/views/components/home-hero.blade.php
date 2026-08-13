@@ -86,7 +86,7 @@ $brandMarks = [
         </defs>
     </svg>
 
-    <div class="relative h-[440px] sm:h-[500px] lg:h-[560px]">
+    <div class="relative h-[calc(100vh-73px)] min-h-[560px]">
         @foreach ($slides as $i => $slide)
             <div class="absolute inset-0 transition-opacity duration-700 ease-in-out"
                  :class="active === {{ $i }} ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'"
@@ -101,12 +101,27 @@ $brandMarks = [
                      style="clip-path: url(#curved-divider)"
                      @if ($i === 0) fetchpriority="high" @else loading="lazy" @endif>
 
-                {{-- Text --}}
+                {{-- Text — each element flies in on its own delay whenever this slide becomes active,
+                     and every time it cycles back around, like a PowerPoint staggered entrance. --}}
                 <div class="relative z-10 flex h-full items-center">
                     <div class="max-w-md px-6 sm:px-10 lg:px-14" style="color: {{ $slide['case'] === 'sentence' ? '#2b2110' : '#ffffff' }}">
-                        <span class="text-xs font-semibold uppercase tracking-widest opacity-80">{{ $slide['brand'] }}</span>
+                        <span x-show="active === {{ $i }}"
+                              x-transition:enter="transition ease-out duration-500"
+                              x-transition:enter-start="opacity-0 -translate-y-3"
+                              x-transition:enter-end="opacity-100 translate-y-0"
+                              x-transition:leave="transition ease-in duration-200"
+                              x-transition:leave-end="opacity-0"
+                              class="inline-block text-xs font-semibold uppercase tracking-widest opacity-80">
+                            {{ $slide['brand'] }}
+                        </span>
 
-                        <h2 @if ($slide['lang'] !== 'en') lang="{{ $slide['lang'] }}" @endif
+                        <h2 x-show="active === {{ $i }}"
+                            x-transition:enter="transition ease-out duration-700 delay-150"
+                            x-transition:enter-start="opacity-0 translate-y-8"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-200"
+                            x-transition:leave-end="opacity-0"
+                            @if ($slide['lang'] !== 'en') lang="{{ $slide['lang'] }}" @endif
                             @class([
                                 'mt-3 text-3xl sm:text-4xl leading-tight',
                                 'uppercase tracking-tight' => $slide['case'] === 'uppercase',
@@ -115,27 +130,46 @@ $brandMarks = [
                             {{ $slide['heading'] }}
                         </h2>
 
-                        <p class="mt-4 max-w-xs text-sm sm:text-base" style="opacity: .9">
+                        <p x-show="active === {{ $i }}"
+                           x-transition:enter="transition ease-out duration-700 delay-300"
+                           x-transition:enter-start="opacity-0 translate-y-8"
+                           x-transition:enter-end="opacity-100 translate-y-0"
+                           x-transition:leave="transition ease-in duration-200"
+                           x-transition:leave-end="opacity-0"
+                           class="mt-4 max-w-xs text-sm sm:text-base" style="opacity: .9">
                             {{ $slide['sub'] }}
                         </p>
 
-                        <a href="{{ $slide['cta']['url'] }}"
-                           class="mt-7 inline-block rounded-full px-6 py-3 text-sm font-semibold shadow-lg transition hover:-translate-y-0.5"
+                        <a x-show="active === {{ $i }}"
+                           x-transition:enter="transition ease-out duration-500 delay-500"
+                           x-transition:enter-start="opacity-0 translate-y-4 scale-90"
+                           x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                           x-transition:leave="transition ease-in duration-200"
+                           x-transition:leave-end="opacity-0"
+                           href="{{ $slide['cta']['url'] }}"
+                           class="mt-7 inline-block rounded-full px-6 py-3 text-sm font-semibold shadow-lg transition-colors hover:-translate-y-0.5"
                            style="background-color: {{ $slide['case'] === 'sentence' ? '#2b2110' : '#ffffff' }}; color: {{ $slide['case'] === 'sentence' ? '#ffffff' : $slide['color'] }}">
                             {{ $slide['cta']['label'] }}
                         </a>
                     </div>
                 </div>
 
-                {{-- Pack shot(s), straddling the curve --}}
+                {{-- Pack shot(s), straddling the curve — cascades in piece by piece --}}
                 @if ($slide['family'])
                     <div class="absolute inset-y-0 hidden sm:block" style="left: 30%; right: 4%;">
                         @foreach ($slide['family'] as $j => $pack)
                             @php
                                 $count = count($slide['family']);
                                 $scale = 0.55 + ($j / ($count - 1)) * 0.45;
+                                $delayClass = ['delay-150', 'delay-300', 'delay-500', 'delay-700'][$j] ?? 'delay-700';
                             @endphp
-                            <img src="{{ asset($pack) }}" alt=""
+                            <img x-show="active === {{ $i }}"
+                                 x-transition:enter="transition ease-out duration-700 {{ $delayClass }}"
+                                 x-transition:enter-start="opacity-0 translate-y-12 scale-90"
+                                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                 x-transition:leave="transition ease-in duration-150"
+                                 x-transition:leave-end="opacity-0"
+                                 src="{{ asset($pack) }}" alt=""
                                  class="absolute bottom-[6%] drop-shadow-2xl"
                                  style="
                                     left: {{ $j * (58 / $count) }}%;
@@ -145,7 +179,13 @@ $brandMarks = [
                         @endforeach
                     </div>
                 @elseif ($slide['pack'])
-                    <img src="{{ asset($slide['pack']) }}" alt=""
+                    <img x-show="active === {{ $i }}"
+                         x-transition:enter="transition ease-out duration-700 delay-200"
+                         x-transition:enter-start="opacity-0 translate-y-10 scale-90"
+                         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-end="opacity-0"
+                         src="{{ asset($slide['pack']) }}" alt=""
                          class="absolute bottom-[6%] hidden h-[80%] drop-shadow-2xl sm:block"
                          style="left: 38%;">
                 @endif

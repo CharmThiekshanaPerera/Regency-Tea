@@ -77,9 +77,14 @@ class EnquiryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListEnquiries::route('/'),
-            'create' => Pages\CreateEnquiry::route('/create'),
-            'edit'   => Pages\EditEnquiry::route('/{record}/edit'),
+            'index' => Pages\ListEnquiries::route('/'),
+            'edit'  => Pages\EditEnquiry::route('/{record}/edit'),
         ];
+    }
+
+    public static function canCreate(): bool
+    {
+        // Enquiries only ever arrive via the public contact form.
+        return false;
     }
 }

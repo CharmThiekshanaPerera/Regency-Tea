@@ -8,6 +8,9 @@
     <meta name="description" content="@yield('meta_description', config('regency.company.tagline'))">
     <link rel="canonical" href="{{ url()->current() }}">
 
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+
     <meta property="og:site_name" content="{{ config('regency.company.name') }}">
     <meta property="og:title" content="@yield('title', config('regency.company.name'))">
     <meta property="og:description" content="@yield('meta_description', config('regency.company.tagline'))">

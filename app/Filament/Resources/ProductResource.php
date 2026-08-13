@@ -55,6 +55,11 @@ class ProductResource extends Resource
 
                     Forms\Components\DateTimePicker::make('published_at')->label('Published'),
                     Forms\Components\TextInput::make('sort')->numeric()->default(0),
+
+                    Forms\Components\KeyValue::make('custom_attributes')
+                        ->label('Custom attributes')
+                        ->helperText('One-off product facts that don\'t belong in the Attributes taxonomy.')
+                        ->columnSpanFull(),
                 ])->columns(2),
 
                 Forms\Components\Tabs\Tab::make('Pack sizes')->schema([
@@ -74,6 +79,9 @@ class ProductResource extends Resource
                             ]),
                             Forms\Components\TextInput::make('pack_quantity')->numeric()->label('Count'),
                             Forms\Components\TextInput::make('pack_weight_g')->numeric()->label('Weight (g)'),
+                            Forms\Components\FileUpload::make('image_path')
+                                ->label('Pack image')->image()->disk('media')->directory('products')
+                                ->helperText('Optional — overrides the product\'s main image for this pack size.'),
                             Forms\Components\Textarea::make('technical_specs')->columnSpanFull(),
 
                             // Commerce fields — hidden until a price list exists.
@@ -81,10 +89,18 @@ class ProductResource extends Resource
                                 ->visible(fn () => config('regency.commerce_enabled'))
                                 ->schema([
                                     Forms\Components\TextInput::make('price_cents')->numeric()->label('Price (cents)'),
+                                    Forms\Components\TextInput::make('sale_price_cents')->numeric()->label('Sale price (cents)'),
                                     Forms\Components\TextInput::make('currency')->maxLength(3),
                                     Forms\Components\TextInput::make('stock_qty')->numeric(),
+                                    Forms\Components\Select::make('stock_status')->options([
+                                        'instock'     => 'In stock',
+                                        'outofstock'  => 'Out of stock',
+                                        'backorder'   => 'On backorder',
+                                    ])->default('instock'),
+                                    Forms\Components\TextInput::make('weight_g')->numeric()->label('Shipping weight (g)'),
+                                    Forms\Components\TextInput::make('tax_class')->label('Tax class'),
                                     Forms\Components\Toggle::make('is_purchasable'),
-                                ]),
+                                ])->columns(2)->columnSpanFull(),
                         ])
                         ->columns(3)
                         ->orderColumn('sort')
@@ -94,10 +110,10 @@ class ProductResource extends Resource
 
                 Forms\Components\Tabs\Tab::make('Images')->schema([
                     Forms\Components\FileUpload::make('primary_image_path')
-                        ->label('Main image')->image()->directory('media/products')->imageEditor(),
+                        ->label('Main image')->image()->disk('media')->directory('products')->imageEditor(),
                     Forms\Components\FileUpload::make('gallery')
                         ->label('Gallery')->image()->multiple()->reorderable()
-                        ->directory('media/products')->columnSpanFull(),
+                        ->disk('media')->directory('products')->columnSpanFull(),
                 ]),
 
                 Forms\Components\Tabs\Tab::make('SEO')->schema([
@@ -115,7 +131,7 @@ class ProductResource extends Resource
             ->defaultSort('sort')
             ->reorderable('sort')
             ->columns([
-                Tables\Columns\ImageColumn::make('primary_image_path')->label('')->square(),
+                Tables\Columns\ImageColumn::make('primary_image_path')->label('')->square()->disk('media'),
                 Tables\Columns\TextColumn::make('title')->searchable()->sortable()->limit(50)->wrap(),
                 Tables\Columns\TextColumn::make('brand.name')->badge()->sortable(),
                 Tables\Columns\TextColumn::make('variants_count')->counts('variants')->label('Packs'),

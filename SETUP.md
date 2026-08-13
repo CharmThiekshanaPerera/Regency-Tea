@@ -43,6 +43,7 @@ php artisan wp:import          # content: 434 SKUs -> ~329 products
 php artisan wp:media           # images: 1,599 originals -> public/media
 php artisan media:verify       # proves every image reference resolves
 php artisan sitemap:generate
+php artisan filament:assets    # publishes Filament's CSS/JS — /admin renders unstyled without this
 ```
 
 > No `storage:link` needed. Images are served as plain files from `public/media`,

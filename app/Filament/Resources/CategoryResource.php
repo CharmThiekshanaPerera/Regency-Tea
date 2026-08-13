@@ -32,7 +32,7 @@ class CategoryResource extends Resource
                 ->label('Range group')->relationship('group', 'name')->searchable()->preload()
                 ->helperText('Groups the 72 legacy categories into navigable sections.'),
             Forms\Components\Toggle::make('is_visible')->label('Visible')->default(true),
-            Forms\Components\FileUpload::make('image_path')->image()->directory('media/categories'),
+            Forms\Components\FileUpload::make('image_path')->image()->disk('media')->directory('categories'),
             Forms\Components\RichEditor::make('description')->columnSpanFull(),
             Forms\Components\TextInput::make('meta_title')->maxLength(70),
             Forms\Components\Textarea::make('meta_description')->maxLength(160),

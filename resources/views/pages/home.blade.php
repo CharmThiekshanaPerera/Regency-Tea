@@ -11,7 +11,7 @@
     'name' => config('regency.company.name'),
     'description' => config('regency.company.tagline'),
     'url' => url('/'),
-    'logo' => asset('images/logo.svg'),
+    'logo' => asset('images/logo.png'),
 ], JSON_UNESCAPED_SLASHES) !!}
 </script>
 @endpush

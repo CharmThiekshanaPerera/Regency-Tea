@@ -31,7 +31,7 @@ class PageResource extends Resource
                         ->helperText('Changing this breaks links — add a redirect if you do.'),
                     Forms\Components\Textarea::make('excerpt')->rows(2)->columnSpanFull(),
                     Forms\Components\RichEditor::make('body')->columnSpanFull(),
-                    Forms\Components\FileUpload::make('hero_image_path')->image()->directory('media/pages'),
+                    Forms\Components\FileUpload::make('hero_image_path')->image()->disk('media')->directory('pages'),
                     Forms\Components\DateTimePicker::make('published_at')->label('Published'),
                 ])->columns(2),
 
@@ -41,7 +41,7 @@ class PageResource extends Resource
                         ->schema([
                             Forms\Components\TextInput::make('question')->label('Question / Name'),
                             Forms\Components\TextInput::make('role')->label('Role (team only)'),
-                            Forms\Components\FileUpload::make('image')->image()->directory('media/pages'),
+                            Forms\Components\FileUpload::make('image')->image()->disk('media')->directory('pages'),
                             Forms\Components\RichEditor::make('answer')->label('Answer / Bio')->columnSpanFull(),
                         ])
                         ->columns(3)->collapsed()->columnSpanFull(),
@@ -50,7 +50,8 @@ class PageResource extends Resource
                 Forms\Components\Tabs\Tab::make('SEO')->schema([
                     Forms\Components\TextInput::make('meta_title')->maxLength(70),
                     Forms\Components\Textarea::make('meta_description')->maxLength(160)->rows(3),
-                    Forms\Components\FileUpload::make('og_image_path')->image()->label('Social share image'),
+                    Forms\Components\FileUpload::make('og_image_path')->image()->disk('media')->directory('pages')
+                        ->label('Social share image'),
                     Forms\Components\Toggle::make('is_indexable')->label('Allow search engines')->default(true),
                 ]),
             ]),

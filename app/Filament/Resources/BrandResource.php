@@ -26,7 +26,7 @@ class BrandResource extends Resource
             Forms\Components\TextInput::make('name')->required()->live(onBlur: true)
                 ->afterStateUpdated(fn ($state, Forms\Set $set) => $set('slug', str($state)->slug())),
             Forms\Components\TextInput::make('slug')->required()->unique(ignoreRecord: true),
-            Forms\Components\FileUpload::make('logo_path')->image()->directory('media/brands')
+            Forms\Components\FileUpload::make('logo_path')->image()->disk('media')->directory('brands')
                 ->helperText('The legacy site had no brand logos — these need to be supplied.'),
             Forms\Components\RichEditor::make('description')->columnSpanFull(),
             Forms\Components\TextInput::make('meta_title')->maxLength(70),
@@ -40,7 +40,7 @@ class BrandResource extends Resource
             ->defaultSort('sort')
             ->reorderable('sort')
             ->columns([
-                Tables\Columns\ImageColumn::make('logo_path')->label(''),
+                Tables\Columns\ImageColumn::make('logo_path')->label('')->disk('media'),
                 Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('products_count')->counts('products')->label('Products'),
             ])

@@ -6,7 +6,7 @@
     <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4">
 
         <a href="{{ route('home') }}" class="shrink-0" aria-label="{{ config('regency.company.name') }} home">
-            <img src="{{ asset('images/logo.svg') }}" alt="{{ config('regency.company.name') }}" class="h-10 w-auto">
+            <img src="{{ asset('images/logo.png') }}" alt="{{ config('regency.company.name') }}" class="h-9 w-auto sm:h-10">
         </a>
 
         <nav class="hidden lg:block" aria-label="Primary">

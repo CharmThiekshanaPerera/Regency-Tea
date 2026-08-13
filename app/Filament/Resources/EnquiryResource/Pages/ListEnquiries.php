@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\EnquiryResource\Pages;
 
 use App\Filament\Resources\EnquiryResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListEnquiries extends ListRecords
@@ -12,6 +11,7 @@ class ListEnquiries extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [Actions\CreateAction::make()];
+        // Enquiries only ever arrive via the public contact form — no manual "New enquiry" action.
+        return [];
     }
 }
