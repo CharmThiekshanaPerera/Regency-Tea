@@ -1,10 +1,66 @@
-@props(['stats' => []])
+@props([])
 
 @php
+/**
+ * Backgrounds are sampled from each product's own packaging (not a fixed
+ * palette), and `case`/`weight` come from the slide data rather than a
+ * hard-coded uppercase transform — slide 2 is a real Sinhala product name
+ * ("අපේම කහට", printed on the pack itself) and reads wrong in caps.
+ */
 $slides = [
-    ['image' => 'images/hero/plantation.jpg', 'focus' => 'center'],
-    ['image' => 'images/hero/sunset-valley.jpg', 'focus' => 'center'],
-    ['image' => 'images/hero/tea-cup.jpg', 'focus' => 'center'],
+    [
+        'brand'    => 'Lakma',
+        'color'    => '#7C6BB0',
+        'photo'    => 'images/hero/tea-cup.jpg',
+        'heading'  => 'Lavender Dreams',
+        'sub'      => 'Green tea with lavender & honey, for a calmer cup.',
+        'case'     => 'uppercase',
+        'weight'   => 800,
+        'lang'     => 'en',
+        'pack'     => 'images/curved-hero/lavender-dreams.png',
+        'family'   => null,
+        'cta'      => ['label' => 'Shop Lakma', 'url' => route('brand.show', 'lakma')],
+    ],
+    [
+        'brand'    => 'Truly Ceylon',
+        'color'    => '#D98F1E',
+        'photo'    => 'images/hero/plantation.jpg',
+        'heading'  => 'අපේම කහට',
+        'sub'      => 'SMAK · Truly Ceylon black tea, straight from the hills.',
+        'case'     => 'sentence',
+        'weight'   => 400,
+        'lang'     => 'si',
+        'pack'     => null,
+        'family'   => [
+            'images/curved-hero/apema-20g.png',
+            'images/curved-hero/apema-50g.png',
+            'images/curved-hero/apema-100g.png',
+            'images/curved-hero/apema-200g.png',
+        ],
+        'cta'      => ['label' => 'Shop Truly Ceylon', 'url' => route('brand.show', 'truly-ceylon')],
+    ],
+    [
+        'brand'    => 'Hyleys',
+        'color'    => '#EFC23E',
+        'photo'    => 'images/hero/sunset-valley.jpg',
+        'heading'  => 'Organic Chamomile Tea',
+        'sub'      => 'Caffeine-free, 100% natural, USDA Organic certified.',
+        'case'     => 'uppercase',
+        'weight'   => 800,
+        'lang'     => 'en',
+        'pack'     => 'images/curved-hero/chamomile.png',
+        'family'   => null,
+        'cta'      => ['label' => 'Shop Hyleys', 'url' => route('brand.show', 'hyleys')],
+    ],
+];
+
+$brands = \App\Models\Brand::orderBy('sort')->get();
+
+$brandMarks = [
+    'hyleys'       => 'images/curved-hero/marks/hyleys.png',
+    'lakma'        => 'images/curved-hero/marks/lakma.png',
+    'truly-ceylon' => 'images/curved-hero/marks/truly-ceylon.png',
+    'dr-tea'       => 'images/curved-hero/marks/dr-tea.png',
 ];
 @endphp
 
@@ -13,75 +69,119 @@ $slides = [
         active: 0,
         n: {{ count($slides) }},
         timer: null,
-        start() { if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) { this.timer = setInterval(() => this.active = (this.active + 1) % this.n, 6000) } },
+        start() { if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) { this.timer = setInterval(() => this.next(), 7000) } },
         stop() { clearInterval(this.timer) },
+        next() { this.active = (this.active + 1) % this.n },
+        prev() { this.active = (this.active - 1 + this.n) % this.n },
     }"
     x-init="start()"
     @mouseenter="stop()" @mouseleave="start()" @focusin="stop()" @focusout="start()"
-    class="relative isolate flex h-[92vh] min-h-[600px] max-h-[820px] items-center overflow-hidden bg-stone-950"
+    class="relative isolate overflow-hidden"
 >
-    {{-- Background slides --}}
-    @foreach ($slides as $i => $slide)
-        <div class="absolute inset-0 transition-opacity duration-[1400ms] ease-in-out"
-             :class="active === {{ $i }} ? 'opacity-100' : 'opacity-0'"
-             aria-hidden="{{ $i === 0 ? 'false' : 'true' }}">
-            <img src="{{ asset($slide['image']) }}" alt=""
-                 class="h-full w-full object-cover animate-kenburns"
-                 @if ($i === 0) fetchpriority="high" @else loading="lazy" @endif>
-        </div>
-    @endforeach
+    <svg width="0" height="0" class="absolute" aria-hidden="true">
+        <defs>
+            <clipPath id="curved-divider" clipPathUnits="objectBoundingBox">
+                <path d="M0.35,0 C0.63,0.18 0.63,0.82 0.53,1 L1,1 L1,0 Z" />
+            </clipPath>
+        </defs>
+    </svg>
 
-    <div class="absolute inset-0 bg-gradient-to-t from-stone-950/95 via-stone-950/55 to-stone-950/10"></div>
-    <div class="absolute inset-0 bg-gradient-to-r from-stone-950/80 via-stone-950/20 to-transparent"></div>
-
-    <img src="{{ asset('images/hero/leaf-accent-1.png') }}" alt="" aria-hidden="true"
-         class="pointer-events-none absolute -right-6 top-16 hidden w-36 opacity-80 lg:block animate-kenburns"
-         style="animation-duration: 26s">
-
-    <div class="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6">
-        <div class="max-w-2xl text-white" data-reveal>
-            <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-emerald-300 ring-1 ring-white/20 backdrop-blur">
-                Pure Ceylon Tea Exporter &middot; Since 1997
-            </span>
-
-            <h1 class="mt-6 text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
-                Ceylon tea, <span class="text-emerald-400">grown &amp; graded</span> for the world
-            </h1>
-
-            <p class="mt-6 max-w-xl text-lg text-stone-200">
-                From the hill country to your shelf — four trusted brands, hundreds of blends,
-                and a factory built to deliver export-grade tea at scale.
-            </p>
-
-            <div class="mt-9 flex flex-wrap gap-4">
-                <a href="{{ route('products') }}"
-                   class="rounded-full bg-emerald-600 px-8 py-3.5 font-semibold text-white shadow-lg shadow-emerald-900/40 transition hover:-translate-y-0.5 hover:bg-emerald-500">
-                    Explore our teas
-                </a>
-                <a href="{{ route('contact') }}"
-                   class="rounded-full border border-white/30 bg-white/5 px-8 py-3.5 font-semibold text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/15">
-                    Request a quote
-                </a>
-            </div>
-        </div>
-    </div>
-
-    {{-- Slide dots --}}
-    <div class="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+    <div class="relative h-[440px] sm:h-[500px] lg:h-[560px]">
         @foreach ($slides as $i => $slide)
-            <button type="button" @click="stop(); active = {{ $i }}"
-                    class="h-2 rounded-full transition-all duration-300"
-                    :class="active === {{ $i }} ? 'w-8 bg-white' : 'w-2 bg-white/40 hover:bg-white/70'"
-                    aria-label="Show slide {{ $i + 1 }}"></button>
+            <div class="absolute inset-0 transition-opacity duration-700 ease-in-out"
+                 :class="active === {{ $i }} ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'"
+                 aria-hidden="{{ $i === 0 ? 'false' : 'true' }}">
+
+                {{-- Flat colour block, sampled from this product's packaging --}}
+                <div class="absolute inset-0" style="background-color: {{ $slide['color'] }}"></div>
+
+                {{-- Photo, clipped to the curved divider --}}
+                <img src="{{ asset($slide['photo']) }}" alt=""
+                     class="absolute inset-0 h-full w-full object-cover"
+                     style="clip-path: url(#curved-divider)"
+                     @if ($i === 0) fetchpriority="high" @else loading="lazy" @endif>
+
+                {{-- Text --}}
+                <div class="relative z-10 flex h-full items-center">
+                    <div class="max-w-md px-6 sm:px-10 lg:px-14" style="color: {{ $slide['case'] === 'sentence' ? '#2b2110' : '#ffffff' }}">
+                        <span class="text-xs font-semibold uppercase tracking-widest opacity-80">{{ $slide['brand'] }}</span>
+
+                        <h2 @if ($slide['lang'] !== 'en') lang="{{ $slide['lang'] }}" @endif
+                            @class([
+                                'mt-3 text-3xl sm:text-4xl leading-tight',
+                                'uppercase tracking-tight' => $slide['case'] === 'uppercase',
+                            ])
+                            style="font-weight: {{ $slide['weight'] }}; {{ $slide['lang'] === 'si' ? "font-family: 'Noto Sans Sinhala', sans-serif;" : '' }}">
+                            {{ $slide['heading'] }}
+                        </h2>
+
+                        <p class="mt-4 max-w-xs text-sm sm:text-base" style="opacity: .9">
+                            {{ $slide['sub'] }}
+                        </p>
+
+                        <a href="{{ $slide['cta']['url'] }}"
+                           class="mt-7 inline-block rounded-full px-6 py-3 text-sm font-semibold shadow-lg transition hover:-translate-y-0.5"
+                           style="background-color: {{ $slide['case'] === 'sentence' ? '#2b2110' : '#ffffff' }}; color: {{ $slide['case'] === 'sentence' ? '#ffffff' : $slide['color'] }}">
+                            {{ $slide['cta']['label'] }}
+                        </a>
+                    </div>
+                </div>
+
+                {{-- Pack shot(s), straddling the curve --}}
+                @if ($slide['family'])
+                    <div class="absolute inset-y-0 hidden sm:block" style="left: 30%; right: 4%;">
+                        @foreach ($slide['family'] as $j => $pack)
+                            @php
+                                $count = count($slide['family']);
+                                $scale = 0.55 + ($j / ($count - 1)) * 0.45;
+                            @endphp
+                            <img src="{{ asset($pack) }}" alt=""
+                                 class="absolute bottom-[6%] drop-shadow-2xl"
+                                 style="
+                                    left: {{ $j * (58 / $count) }}%;
+                                    height: {{ $scale * 78 }}%;
+                                    z-index: {{ $j }};
+                                 ">
+                        @endforeach
+                    </div>
+                @elseif ($slide['pack'])
+                    <img src="{{ asset($slide['pack']) }}" alt=""
+                         class="absolute bottom-[6%] hidden h-[80%] drop-shadow-2xl sm:block"
+                         style="left: 38%;">
+                @endif
+            </div>
         @endforeach
+
+        {{-- Persistent chrome: arrows --}}
+        <button type="button" @click="stop(); prev()"
+                class="absolute left-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/80 p-2.5 text-stone-800 shadow-md backdrop-blur transition hover:bg-white"
+                aria-label="Previous slide">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+        </button>
+        <button type="button" @click="stop(); next()"
+                class="absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/80 p-2.5 text-stone-800 shadow-md backdrop-blur transition hover:bg-white"
+                aria-label="Next slide">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+        </button>
+
+        {{-- Persistent chrome: BRANDS tab --}}
+        <a href="{{ route('ranges') }}"
+           class="absolute right-0 top-8 z-20 hidden items-center gap-1 rounded-l-full bg-stone-950/85 py-2 pl-4 pr-5 text-xs font-semibold uppercase tracking-widest text-white shadow-md backdrop-blur transition hover:bg-stone-950 sm:flex">
+            Brands <span aria-hidden="true">&rarr;</span>
+        </a>
     </div>
 
-    {{-- Scroll cue --}}
-    <a href="#below-hero"
-       class="absolute bottom-8 right-8 z-10 hidden animate-bounce items-center justify-center rounded-full border border-white/30 p-3 text-white/80 transition hover:border-white hover:text-white sm:flex"
-       aria-label="Scroll to content">
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-        </svg>
-    </a>
+    {{-- Persistent chrome: brand strip --}}
+    <div class="relative z-20 border-t border-stone-200 bg-white py-3">
+        <ul role="list" class="mx-auto flex max-w-7xl items-center justify-center gap-8 px-4 sm:gap-14">
+            @foreach ($brands as $brand)
+                <li>
+                    <a href="{{ route('brand.show', $brand) }}" class="block opacity-70 transition hover:opacity-100">
+                        <img src="{{ asset($brandMarks[$brand->slug] ?? '') }}" alt="{{ $brand->name }}"
+                             class="h-7 w-auto object-contain sm:h-9">
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    </div>
 </section>
