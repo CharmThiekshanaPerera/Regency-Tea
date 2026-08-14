@@ -99,19 +99,25 @@ function initScrollReveal() {
 }
 
 function animateCount(el) {
-    const target = parseFloat(el.dataset.countTo);
+    const raw = el.dataset.countTo;
+    const target = parseFloat(raw);
     if (Number.isNaN(target) || el.dataset.counted) return;
     el.dataset.counted = '1';
 
     const suffix = el.dataset.countSuffix || '';
+    // Preserve the target's own decimal precision (e.g. "2.75") instead of
+    // always rounding to a whole number, and thousand-separate large integers.
+    const decimals = (raw.split('.')[1] || '').length;
+    const format = (n) => decimals > 0 ? n.toFixed(decimals) : Math.round(n).toLocaleString('en-US');
     const duration = 1200;
     const start = performance.now();
 
     const tick = (now) => {
         const progress = Math.min((now - start) / duration, 1);
         const eased = 1 - Math.pow(1 - progress, 3);
-        el.textContent = Math.round(target * eased) + suffix;
+        el.textContent = format(target * eased) + suffix;
         if (progress < 1) requestAnimationFrame(tick);
+        else el.textContent = format(target) + suffix;
     };
 
     requestAnimationFrame(tick);

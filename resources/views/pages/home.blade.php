@@ -191,7 +191,7 @@
             ] as $badge)
                 <div class="flex flex-col items-center gap-3 text-center">
                     <img src="{{ asset('images/badges/'.$badge['file']) }}" alt="{{ $badge['label'] }}"
-                         class="h-16 w-auto object-contain grayscale transition duration-300 hover:grayscale-0" loading="lazy">
+                         class="h-24 w-auto object-contain transition duration-300 hover:scale-110 sm:h-28" loading="lazy">
                     <span class="text-xs font-medium text-stone-500">{{ $badge['label'] }}</span>
                 </div>
             @endforeach

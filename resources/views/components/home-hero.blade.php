@@ -54,14 +54,6 @@ $slides = [
     ],
 ];
 
-$brands = \App\Models\Brand::orderBy('sort')->get();
-
-$brandMarks = [
-    'hyleys'       => 'images/curved-hero/marks/hyleys.png',
-    'lakma'        => 'images/curved-hero/marks/lakma.png',
-    'truly-ceylon' => 'images/curved-hero/marks/truly-ceylon.png',
-    'dr-tea'       => 'images/curved-hero/marks/dr-tea.png',
-];
 @endphp
 
 <section
@@ -86,7 +78,7 @@ $brandMarks = [
         </defs>
     </svg>
 
-    <div class="relative h-[calc(100vh-73px)] min-h-[560px]">
+    <div class="relative h-[calc(100vh-65px)] min-h-[560px]">
         @foreach ($slides as $i => $slide)
             <div class="absolute inset-0 transition-opacity duration-700 ease-in-out"
                  :class="active === {{ $i }} ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'"
@@ -105,13 +97,17 @@ $brandMarks = [
                      and every time it cycles back around, like a PowerPoint staggered entrance. --}}
                 <div class="relative z-10 flex h-full items-center">
                     <div class="max-w-md px-6 sm:px-10 lg:px-14" style="color: {{ $slide['case'] === 'sentence' ? '#2b2110' : '#ffffff' }}">
+                        {{-- Muted via colour alpha, not `opacity` — that CSS property is what the
+                             enter/leave transition below animates, and a permanent opacity utility
+                             on the same element would fight it for the whole time both are applied. --}}
                         <span x-show="active === {{ $i }}"
                               x-transition:enter="transition ease-out duration-500"
                               x-transition:enter-start="opacity-0 -translate-y-3"
                               x-transition:enter-end="opacity-100 translate-y-0"
                               x-transition:leave="transition ease-in duration-200"
                               x-transition:leave-end="opacity-0"
-                              class="inline-block text-xs font-semibold uppercase tracking-widest opacity-80">
+                              class="inline-block text-xs font-semibold uppercase tracking-widest"
+                              style="color: {{ $slide['case'] === 'sentence' ? '#2b2110cc' : '#ffffffcc' }}">
                             {{ $slide['brand'] }}
                         </span>
 
@@ -136,7 +132,8 @@ $brandMarks = [
                            x-transition:enter-end="opacity-100 translate-y-0"
                            x-transition:leave="transition ease-in duration-200"
                            x-transition:leave-end="opacity-0"
-                           class="mt-4 max-w-xs text-sm sm:text-base" style="opacity: .9">
+                           class="mt-4 max-w-xs text-sm sm:text-base"
+                           style="color: {{ $slide['case'] === 'sentence' ? '#2b2110e6' : '#ffffffe6' }}">
                             {{ $slide['sub'] }}
                         </p>
 
@@ -147,7 +144,7 @@ $brandMarks = [
                            x-transition:leave="transition ease-in duration-200"
                            x-transition:leave-end="opacity-0"
                            href="{{ $slide['cta']['url'] }}"
-                           class="mt-7 inline-block rounded-full px-6 py-3 text-sm font-semibold shadow-lg transition-colors hover:-translate-y-0.5"
+                           class="mt-7 inline-block rounded-full px-6 py-3 text-sm font-semibold shadow-lg transition hover:-translate-y-0.5"
                            style="background-color: {{ $slide['case'] === 'sentence' ? '#2b2110' : '#ffffff' }}; color: {{ $slide['case'] === 'sentence' ? '#ffffff' : $slide['color'] }}">
                             {{ $slide['cta']['label'] }}
                         </a>
@@ -209,19 +206,5 @@ $brandMarks = [
            class="absolute right-0 top-8 z-20 hidden items-center gap-1 rounded-l-full bg-stone-950/85 py-2 pl-4 pr-5 text-xs font-semibold uppercase tracking-widest text-white shadow-md backdrop-blur transition hover:bg-stone-950 sm:flex">
             Brands <span aria-hidden="true">&rarr;</span>
         </a>
-    </div>
-
-    {{-- Persistent chrome: brand strip --}}
-    <div class="relative z-20 border-t border-stone-200 bg-white py-3">
-        <ul role="list" class="mx-auto flex max-w-7xl items-center justify-center gap-8 px-4 sm:gap-14">
-            @foreach ($brands as $brand)
-                <li>
-                    <a href="{{ route('brand.show', $brand) }}" class="block opacity-70 transition hover:opacity-100">
-                        <img src="{{ asset($brandMarks[$brand->slug] ?? '') }}" alt="{{ $brand->name }}"
-                             class="h-7 w-auto object-contain sm:h-9">
-                    </a>
-                </li>
-            @endforeach
-        </ul>
     </div>
 </section>

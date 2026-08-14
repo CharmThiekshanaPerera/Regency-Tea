@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CatalogueController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +47,8 @@ Route::post('/contact', [ContactController::class, 'store'])
     ->name('contact.store');
 
 Route::get('/search', [CatalogueController::class, 'search'])->name('search');
+
+Route::get('/locale/{locale}', [LocaleController::class, 'set'])->name('locale.set');
 
 /*
 |--------------------------------------------------------------------------

@@ -11,12 +11,13 @@
     <div class="relative mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-4">
 
         <div>
-            <p class="text-lg font-semibold text-white">{{ config('regency.company.name') }}</p>
-            <p class="mt-2 text-sm text-stone-400">{{ config('regency.company.tagline') }}</p>
+            <img src="{{ asset('images/logo.png') }}" alt="{{ config('regency.company.name') }}"
+                 class="h-9 w-auto brightness-0 invert">
+            <p class="mt-3 text-sm text-stone-400">{{ config('regency.company.tagline') }}</p>
         </div>
 
         <div>
-            <p class="text-sm font-semibold uppercase tracking-wide text-stone-500">Ranges</p>
+            <p class="text-sm font-semibold uppercase tracking-wide text-stone-500">{{ __('site.footer.ranges') }}</p>
             <ul class="mt-3 space-y-2 text-sm">
                 @foreach ($groups as $g)
                     <li><a href="{{ route('ranges') }}#{{ $g->slug }}" class="transition hover:text-emerald-400">{{ $g->name }}</a></li>
@@ -25,7 +26,7 @@
         </div>
 
         <div>
-            <p class="text-sm font-semibold uppercase tracking-wide text-stone-500">Brands</p>
+            <p class="text-sm font-semibold uppercase tracking-wide text-stone-500">{{ __('site.footer.brands') }}</p>
             <ul class="mt-3 space-y-2 text-sm">
                 @foreach ($brands as $b)
                     <li><a href="{{ route('brand.show', $b) }}" class="transition hover:text-emerald-400">{{ $b->name }}</a></li>
@@ -34,7 +35,7 @@
         </div>
 
         <div>
-            <p class="text-sm font-semibold uppercase tracking-wide text-stone-500">Company</p>
+            <p class="text-sm font-semibold uppercase tracking-wide text-stone-500">{{ __('site.footer.company') }}</p>
             <ul class="mt-3 space-y-2 text-sm">
                 <li><a href="{{ route('about') }}" class="transition hover:text-emerald-400">About</a></li>
                 <li><a href="{{ route('ceylon-tea') }}" class="transition hover:text-emerald-400">Ceylon Tea</a></li>
@@ -48,6 +49,6 @@
     </div>
 
     <div class="relative border-t border-white/10 py-6 text-center text-xs text-stone-500">
-        &copy; {{ date('Y') }} {{ config('regency.company.name') }}. All rights reserved.
+        &copy; {{ date('Y') }} {{ config('regency.company.name') }}. {{ __('site.footer.rights') }}
     </div>
 </footer>
