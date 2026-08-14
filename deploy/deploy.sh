@@ -44,9 +44,15 @@ php composer.phar install --no-dev --optimize-autoloader
 echo "==> Running database migrations"
 php artisan migrate --force
 
-echo "==> Caching config, routes, and views"
+echo "==> Rebuilding caches with the new code"
+# Clear before re-caching, not just cache-on-top — a stale cached config or
+# view from the previous deploy can otherwise linger underneath the new
+# cache, or worse, break `artisan` itself before it gets the chance to
+# regenerate it.
+php artisan config:clear
 php artisan config:cache
 php artisan route:cache
+php artisan view:clear
 php artisan view:cache
 
 echo "==> Re-linking storage"

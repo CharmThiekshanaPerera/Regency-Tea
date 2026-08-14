@@ -1,5 +1,45 @@
 # Deploying to GoDaddy shared cPanel hosting
 
+## Quick reminder — every update to cPanel
+
+`deploy/deploy.sh` runs all of this for you (`bash deploy/deploy.sh`), but
+keep this checklist handy for anything run by hand or to sanity-check the
+script's output:
+
+```bash
+cd ~/regency_app
+
+# 1. Pull latest code
+git pull origin main
+
+# 2. Update dependencies if composer.json/lock changed
+php composer.phar install --no-dev --optimize-autoloader
+
+# 3. Run any new migrations
+php artisan migrate --force
+
+# 4. Rebuild caches with the new code
+php artisan config:clear
+php artisan config:cache
+php artisan route:cache
+php artisan view:clear
+php artisan view:cache
+
+# 5. Copy updated public assets into the web root
+cp -r ~/regency_app/public/. ~/public_html/
+
+# 6. Re-apply the production entry point — git pull touches public/index.php,
+#    but public_html/index.php must stay the regency_app-pathed version
+cp ~/regency_app/deploy/index.production.php ~/public_html/index.php
+cp ~/regency_app/deploy/.htaccess ~/public_html/.htaccess
+```
+
+Step 6 is easy to forget: a plain `git pull` never changes anything under
+`~/public_html` itself, but if you ever copy `public/` over by hand instead
+of via `deploy.sh`, it will drag the stock `public/index.php` on top of the
+one that's supposed to reach into `../regency_app` — that's what re-applies
+the production entry point every single time, not just on first setup.
+
 ## Layout
 
 GoDaddy's shared hosting locks the web docroot to `~/public_html` and won't
@@ -67,7 +107,7 @@ The script, in order:
 2. `git pull origin main`
 3. `php composer.phar install --no-dev --optimize-autoloader`
 4. `php artisan migrate --force`
-5. `php artisan config:cache && php artisan route:cache && php artisan view:cache`
+5. `php artisan config:clear && php artisan config:cache && php artisan route:cache && php artisan view:clear && php artisan view:cache`
 6. `php artisan storage:link`
 7. Copies `~/regency_app/public/.` into `~/public_html/`
 8. Overwrites `~/public_html/index.php` and `~/public_html/.htaccess` with
