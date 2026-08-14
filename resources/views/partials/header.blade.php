@@ -3,10 +3,10 @@
 @endphp
 
 <header class="sticky top-0 z-40 border-b border-stone-200 bg-white/95 backdrop-blur">
-    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-1 px-2 py-3.5 sm:gap-4 sm:px-4">
 
         <a href="{{ route('home') }}" class="shrink-0" aria-label="{{ config('regency.company.name') }} home">
-            <img src="{{ asset('images/logo.png') }}" alt="{{ config('regency.company.name') }}" class="h-8 w-auto sm:h-9">
+            <img src="{{ asset('images/logo.png') }}" alt="{{ config('regency.company.name') }}" class="h-6 w-auto sm:h-8 lg:h-9">
         </a>
 
         <nav class="hidden xl:block" aria-label="Primary">
@@ -32,16 +32,16 @@
             </ul>
         </nav>
 
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1 sm:gap-2">
             <div x-data="{ open: false }" class="relative" @keydown.escape.window="open = false">
                 <button type="button" @click="open = !open"
-                        class="flex h-9 items-center gap-1 rounded-full px-2.5 text-sm font-medium text-stone-600 transition hover:bg-stone-100 hover:text-emerald-700"
+                        class="flex h-9 items-center gap-1 rounded-full px-1.5 text-sm font-medium text-stone-600 transition hover:bg-stone-100 hover:text-emerald-700 sm:px-2.5"
                         :aria-expanded="open.toString()" aria-label="{{ __('site.nav.language') }}">
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                         <circle cx="12" cy="12" r="9"/>
                         <path stroke-linecap="round" d="M3 12h18M12 3c2.5 2.7 4 6 4 9s-1.5 6.3-4 9c-2.5-2.7-4-6-4-9s1.5-6.3 4-9Z"/>
                     </svg>
-                    <span class="uppercase">{{ app()->getLocale() }}</span>
+                    <span class="hidden uppercase sm:inline">{{ app()->getLocale() }}</span>
                 </button>
 
                 <div x-show="open" x-cloak x-transition.origin.top.right
@@ -87,7 +87,7 @@
             </div>
 
             <a href="{{ route('contact') }}"
-               class="rounded-full bg-emerald-800 px-5 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-emerald-900 hover:shadow-md">
+               class="rounded-full bg-emerald-800 px-3.5 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-emerald-900 hover:shadow-md sm:px-5">
                 {{ __('site.nav.enquire') }}
             </a>
 
