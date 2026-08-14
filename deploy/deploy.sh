@@ -56,7 +56,12 @@ php artisan view:clear
 php artisan view:cache
 
 echo "==> Re-linking storage"
-php artisan storage:link
+# storage:link exits 0 even when the link already exists, but it prints a
+# scary-looking "ERROR  The [public/storage] link already exists." line on
+# every subsequent deploy. Skip it once it's there instead of re-running it.
+if [ ! -L ~/regency_app/public/storage ]; then
+    php artisan storage:link
+fi
 
 echo "==> Publishing built assets to the web docroot"
 # GoDaddy's docroot (~/public_html) is a separate sibling folder, not
