@@ -61,12 +61,14 @@
             <p class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">{{ __('pages/home.brands.heading') }}</p>
         </div>
 
-        <ul role="list" class="mt-12 flex flex-wrap items-center justify-center gap-x-16 gap-y-10">
+        <ul role="list" class="mt-12 grid grid-cols-2 gap-5 sm:gap-6 lg:grid-cols-4">
             @foreach ($brands as $i => $brand)
                 @if (isset($brandMarks[$brand->slug]))
                     <li style="--reveal-delay: {{ $i * 80 }}ms">
-                        <a href="{{ route('brand.show', $brand) }}" class="block opacity-80 grayscale transition duration-300 hover:opacity-100 hover:grayscale-0">
-                            <img src="{{ asset($brandMarks[$brand->slug]) }}" alt="{{ $brand->name }}" class="h-16 w-auto object-contain sm:h-20">
+                        <a href="{{ route('brand.show', $brand) }}"
+                           class="group flex h-32 items-center justify-center rounded-2xl border border-stone-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-xl sm:h-40">
+                            <img src="{{ asset($brandMarks[$brand->slug]) }}" alt="{{ $brand->name }}"
+                                 class="max-h-full max-w-full object-contain transition duration-300 group-hover:scale-105">
                         </a>
                     </li>
                 @endif
