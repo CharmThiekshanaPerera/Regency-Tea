@@ -25,7 +25,7 @@ class RecentEnquiries extends BaseWidget
                 Tables\Columns\TextColumn::make('company'),
                 Tables\Columns\TextColumn::make('subject')->limit(45),
                 Tables\Columns\IconColumn::make('handled_at')->boolean()
-                    ->getStateUsing(fn ($r) => $r->handled_at !== null)->label('Handled'),
+                    ->getStateUsing(fn ($record) => $record->handled_at !== null)->label('Handled'),
             ])
             ->paginated(false);
     }
