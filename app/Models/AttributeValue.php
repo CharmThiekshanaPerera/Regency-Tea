@@ -5,10 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\Translatable\HasTranslations;
 
 class AttributeValue extends Model
 {
+    use HasTranslations;
+
     protected $guarded = [];
+
+    public array $translatable = ['value'];
 
     public function attribute(): BelongsTo
     {

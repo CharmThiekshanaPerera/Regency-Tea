@@ -6,12 +6,15 @@ use App\Filament\Resources\ProductGroupResource\Pages;
 use App\Models\ProductGroup;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Resources\Concerns\Translatable;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
 class ProductGroupResource extends Resource
 {
+    use Translatable;
+
     protected static ?string $model = ProductGroup::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-group';

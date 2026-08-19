@@ -5,10 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\Translatable\HasTranslations;
 
 class Post extends Model
 {
+    use HasTranslations;
+
     protected $guarded = [];
+
+    public array $translatable = ['title', 'excerpt', 'body', 'meta_title', 'meta_description'];
 
     protected function casts(): array
     {

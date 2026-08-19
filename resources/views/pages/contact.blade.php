@@ -15,19 +15,19 @@ $offices = [
 
 {{-- Hero --}}
 <section class="relative isolate flex h-[42vh] min-h-[320px] items-center overflow-hidden bg-stone-950">
-    <img src="{{ asset('images/contact/hero.jpg') }}" alt="Regency Teas contact card"
+    <img src="{{ asset('images/contact/hero.jpg') }}" alt="{{ __('pages/contact.hero.image_alt') }}"
          class="absolute inset-0 h-full w-full object-cover" fetchpriority="high">
     <div class="absolute inset-0 bg-gradient-to-t from-stone-950/95 via-stone-950/70 to-stone-950/40"></div>
 
     <div class="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6" data-reveal>
         <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-emerald-300 ring-1 ring-white/20 backdrop-blur">
-            We reply within 2 business days
+            {{ __('pages/contact.hero.badge') }}
         </span>
         <h1 class="mt-6 max-w-xl text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl">
-            Get in touch
+            {{ __('pages/contact.hero.heading') }}
         </h1>
         <p class="mt-4 max-w-lg text-lg text-stone-200">
-            Wholesale, HORECA and private-label enquiries are all welcome — tell us what you need.
+            {{ __('pages/contact.hero.subheading') }}
         </p>
     </div>
 </section>
@@ -36,10 +36,10 @@ $offices = [
 <section class="border-b border-stone-200 bg-white py-14" data-reveal>
     <div class="mx-auto grid max-w-7xl gap-6 px-4 sm:grid-cols-2 lg:grid-cols-4">
         @foreach ([
-            ['icon' => 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z', 'label' => 'Phone', 'value' => '+94 11 4713 518', 'href' => 'tel:+94114713518'],
-            ['icon' => 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', 'label' => 'Email', 'value' => 'regencyt@regencyteas.com', 'href' => 'mailto:regencyt@regencyteas.com'],
-            ['icon' => 'M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z', 'label' => 'Address', 'value' => 'No. 359, Biyagama Road, Kelaniya, Sri Lanka 11600', 'href' => 'https://www.google.com/maps?q=Regency+Teas+Sri+Lanka'],
-            ['icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => 'Hours', 'value' => 'Mon–Fri, 8.30am – 5.00pm', 'href' => null],
+            ['icon' => 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z', 'label' => __('pages/contact.quick_info.phone_label'), 'value' => '+94 11 4713 518', 'href' => 'tel:+94114713518'],
+            ['icon' => 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', 'label' => __('pages/contact.quick_info.email_label'), 'value' => 'regencyt@regencyteas.com', 'href' => 'mailto:regencyt@regencyteas.com'],
+            ['icon' => 'M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z', 'label' => __('pages/contact.quick_info.address_label'), 'value' => 'No. 359, Biyagama Road, Kelaniya, Sri Lanka 11600', 'href' => 'https://www.google.com/maps?q=Regency+Teas+Sri+Lanka'],
+            ['icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'label' => __('pages/contact.quick_info.hours_label'), 'value' => 'Mon–Fri, 8.30am – 5.00pm', 'href' => null],
         ] as $i => $item)
             <div class="flex items-start gap-4 rounded-xl border border-stone-200 p-5 transition hover:border-emerald-600 hover:shadow-md" style="--reveal-delay: {{ $i * 80 }}ms">
                 <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
@@ -65,8 +65,8 @@ $offices = [
     <div class="mx-auto max-w-7xl px-4">
         <div class="grid gap-12 lg:grid-cols-2">
             <div>
-                <h2 class="text-sm font-semibold uppercase tracking-widest text-emerald-700">Send a message</h2>
-                <p class="mt-2 text-3xl font-semibold tracking-tight">Tell us what you need</p>
+                <h2 class="text-sm font-semibold uppercase tracking-widest text-emerald-700">{{ __('pages/contact.form.eyebrow') }}</h2>
+                <p class="mt-2 text-3xl font-semibold tracking-tight">{{ __('pages/contact.form.heading') }}</p>
 
                 @if (session('status'))
                     <div role="status" class="mt-6 rounded-lg border border-emerald-300 bg-emerald-50 px-4 py-3 text-emerald-900">
@@ -76,7 +76,7 @@ $offices = [
 
                 @if ($errors->any())
                     <div role="alert" class="mt-6 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-red-900">
-                        <p class="font-medium">Please check the form:</p>
+                        <p class="font-medium">{{ __('pages/contact.form.errors_heading') }}</p>
                         <ul class="mt-1 list-disc pl-5 text-sm">
                             @foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach
                         </ul>
@@ -88,15 +88,15 @@ $offices = [
 
                     {{-- honeypot: bots fill this, humans never see it --}}
                     <div class="hidden" aria-hidden="true">
-                        <label for="website">Website</label>
+                        <label for="website">{{ __('pages/contact.form.honeypot_label') }}</label>
                         <input id="website" type="text" name="website" tabindex="-1" autocomplete="off">
                     </div>
 
                     @if (request('product'))
                         <input type="hidden" name="source" value="product">
                         <div class="rounded-lg border border-stone-200 bg-stone-50 px-4 py-3 text-sm">
-                            Enquiry about: <strong>{{ request('product') }}</strong>
-                            @if (request('code')) <span class="text-stone-500">(Item Code {{ request('code') }})</span> @endif
+                            {{ __('pages/contact.form.enquiry_about') }} <strong>{{ request('product') }}</strong>
+                            @if (request('code')) <span class="text-stone-500">{{ __('pages/contact.form.item_code', ['code' => request('code')]) }}</span> @endif
                         </div>
                     @endif
 
@@ -146,7 +146,7 @@ $offices = [
                 {{-- The page's raw imported body duplicates the quick-info cards and global
                      offices below almost verbatim, so it's intentionally not rendered here. --}}
                 <div class="overflow-hidden rounded-2xl border border-stone-200 shadow-lg">
-                    <iframe title="Regency Teas location" loading="lazy" class="h-96 w-full border-0"
+                    <iframe title="{{ __('pages/contact.map.title') }}" loading="lazy" class="h-96 w-full border-0"
                             referrerpolicy="no-referrer-when-downgrade"
                             src="https://www.google.com/maps?q=Regency+Teas+Sri+Lanka&output=embed"></iframe>
                 </div>
@@ -159,8 +159,8 @@ $offices = [
 <section class="bg-stone-950 py-20 text-white" data-reveal>
     <div class="mx-auto max-w-7xl px-4">
         <div class="mx-auto max-w-2xl text-center">
-            <h2 class="text-sm font-semibold uppercase tracking-widest text-emerald-400">Around the world</h2>
-            <p class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Our global representatives</p>
+            <h2 class="text-sm font-semibold uppercase tracking-widest text-emerald-400">{{ __('pages/contact.offices.eyebrow') }}</h2>
+            <p class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">{{ __('pages/contact.offices.heading') }}</p>
         </div>
 
         <ul role="list" class="mt-12 grid gap-6 sm:grid-cols-3">

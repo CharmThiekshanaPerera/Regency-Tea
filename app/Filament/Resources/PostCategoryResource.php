@@ -6,12 +6,15 @@ use App\Filament\Resources\PostCategoryResource\Pages;
 use App\Models\PostCategory;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Resources\Concerns\Translatable;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
 class PostCategoryResource extends Resource
 {
+    use Translatable;
+
     protected static ?string $model = PostCategory::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-folder';

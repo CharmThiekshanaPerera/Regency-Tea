@@ -7,10 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Translatable\HasTranslations;
 
 class Product extends Model
 {
+    use HasTranslations;
+
     protected $guarded = [];
+
+    /** base_title stays untranslated — it's an internal SKU-grouping key, not display text. */
+    public array $translatable = ['title', 'short_description', 'description', 'meta_title', 'meta_description'];
 
     protected function casts(): array
     {

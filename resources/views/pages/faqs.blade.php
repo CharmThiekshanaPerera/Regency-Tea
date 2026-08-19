@@ -4,33 +4,33 @@
 
 @php
 $groups = [
-    'Ordering & private label' => [
-        'Do you offer private label / white label manufacturing?' =>
-            'Yes — contract packing for private labels has been part of our business since the beginning. Our tasters build a blend to your brief, we pack it under your own branding in the format you need, and handle export documentation from Colombo. See the <a href="'.route('private-label').'" class="text-emerald-700 underline">Private Label</a> page for the full process.',
-        'Do you supply wholesale and HORECA buyers, or only private label?' =>
-            'Both. Alongside private label we supply wholesale and HORECA (hotel, restaurant &amp; catering) customers with our own Hyleys, Lakma, Truly Ceylon and Dr. Tea brands.',
-        'What packaging formats can you produce?' =>
-            'Tea bags (staple-free and pyramid), foil envelopes, loose leaf, tins, cartons and pouches — produced across our staple-free and pyramid lines at up to 2.75 million tea bags a day.',
-        'Can you develop a custom blend for my market?' =>
-            'Yes. Our tasters build blends to a target flavour profile, price point and market — classic black and green teas alongside specialty fruit and herbal blends from our own dedicated cold storage facility.',
+    __('pages/faqs.groups.ordering.title') => [
+        __('pages/faqs.groups.ordering.items.private_label.question') =>
+            __('pages/faqs.groups.ordering.items.private_label.answer', ['url' => route('private-label')]),
+        __('pages/faqs.groups.ordering.items.wholesale_horeca.question') =>
+            __('pages/faqs.groups.ordering.items.wholesale_horeca.answer'),
+        __('pages/faqs.groups.ordering.items.packaging_formats.question') =>
+            __('pages/faqs.groups.ordering.items.packaging_formats.answer'),
+        __('pages/faqs.groups.ordering.items.custom_blend.question') =>
+            __('pages/faqs.groups.ordering.items.custom_blend.answer'),
     ],
-    'Certifications & quality' => [
-        'What certifications do you hold?' =>
-            'We\'re certified through the Sri Lanka Tea Board and Bureau Veritas — GMP, ISO 22000 and FSSC 22000 — and licensed for Kosher, Halal and Organic-certified production.',
-        'How is quality controlled?' =>
-            'Every batch is tasted and graded in-house before it ships. Our team of professional tea tasters grades over 8,000 lots of tea every week at our own 90,000 sq&nbsp;ft facility.',
+    __('pages/faqs.groups.certifications.title') => [
+        __('pages/faqs.groups.certifications.items.certifications_held.question') =>
+            __('pages/faqs.groups.certifications.items.certifications_held.answer'),
+        __('pages/faqs.groups.certifications.items.quality_control.question') =>
+            __('pages/faqs.groups.certifications.items.quality_control.answer'),
     ],
-    'Export & logistics' => [
-        'Which markets do you export to?' =>
-            'We export to 25+ countries, with dedicated representatives in Canada, Russia and the USA — see the <a href="'.route('contact').'" class="text-emerald-700 underline">Contact</a> page for their details.',
-        'Do you provide product catalogues?' =>
-            'Yes — our full catalogue and a Hyleys-specific catalogue are both available as downloads on the <a href="'.route('catalogue').'" class="text-emerald-700 underline">Catalogue</a> page.',
+    __('pages/faqs.groups.export.title') => [
+        __('pages/faqs.groups.export.items.markets.question') =>
+            __('pages/faqs.groups.export.items.markets.answer', ['url' => route('contact')]),
+        __('pages/faqs.groups.export.items.catalogues.question') =>
+            __('pages/faqs.groups.export.items.catalogues.answer', ['url' => route('catalogue')]),
     ],
-    'Getting in touch' => [
-        'How do I request a quote or samples?' =>
-            'Send us your target market, volumes and packaging format through the <a href="'.route('contact').'" class="text-emerald-700 underline">Contact page</a> — we reply within 2 business days.',
-        'Where are you located?' =>
-            'Our head office and production facility are at No. 359, Biyagama Road, Kelaniya, Sri Lanka.',
+    __('pages/faqs.groups.contact.title') => [
+        __('pages/faqs.groups.contact.items.quote_samples.question') =>
+            __('pages/faqs.groups.contact.items.quote_samples.answer', ['url' => route('contact')]),
+        __('pages/faqs.groups.contact.items.location.question') =>
+            __('pages/faqs.groups.contact.items.location.answer'),
     ],
 ];
 @endphp
@@ -59,10 +59,10 @@ $groups = [
 
     <div class="relative z-10 mx-auto w-full max-w-4xl px-4 sm:px-6" data-reveal>
         <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-emerald-300 ring-1 ring-white/20 backdrop-blur">
-            FAQs
+            {{ __('pages/faqs.hero.badge') }}
         </span>
         <h1 class="mt-4 text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl">
-            Frequently asked questions
+            {{ __('pages/faqs.hero.heading') }}
         </h1>
     </div>
 </section>
@@ -76,8 +76,8 @@ $groups = [
     @endforeach
 
     <div class="mt-16 rounded-2xl border border-stone-200 bg-stone-50 p-8 text-center" data-reveal>
-        <p class="text-lg font-medium">Still have a question?</p>
-        <p class="mt-2 text-sm text-stone-600">Our team replies within 2 business days.</p>
+        <p class="text-lg font-medium">{{ __('pages/faqs.cta.question') }}</p>
+        <p class="mt-2 text-sm text-stone-600">{{ __('pages/faqs.cta.reply_note') }}</p>
         <x-quote-button class="mt-5" />
     </div>
 </div>

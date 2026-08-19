@@ -6,12 +6,15 @@ use App\Filament\Resources\ProductResource\Pages;
 use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Resources\Concerns\Translatable;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
 class ProductResource extends Resource
 {
+    use Translatable;
+
     protected static ?string $model = Product::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';

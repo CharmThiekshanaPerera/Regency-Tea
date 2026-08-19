@@ -37,7 +37,7 @@ class PageController extends Controller
             'latestPosts' => Post::published()->latest('published_at')->take(3)->get(),
             'stats'       => [
                 'years'     => now()->year - 1997,
-                'countries' => 25,
+                'countries' => 35,
                 'brands'    => Brand::count(),
                 'products'  => Product::published()->count(),
             ],

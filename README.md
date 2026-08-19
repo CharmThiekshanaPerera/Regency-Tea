@@ -31,6 +31,10 @@ this section is the quick-reference version.
   `pdo_mysql`, `mysqli`, `intl`, `fileinfo`, `zip`, `mbstring`, `bcmath`, `gd`
   — plus the usual `curl`, `openssl`, `dom`, `xml`, `tokenizer`, `ctype`,
   `phar`, `session`.
+  Also enable **`pdo_sqlite`** (and `sqlite3` if listed separately) — it's
+  not needed by the app itself, but `php artisan wp:import` (see "Populating
+  the database" below) opens `database/wp-migration.sqlite` via PDO and
+  fails with `could not find driver` without it.
 - **PHP CLI binary**: `/opt/cpanel/ea-php*` paths on this host are stubs —
   the working binary is `/opt/alt/php84/usr/bin/php`. Alias it per session:
 
@@ -60,6 +64,24 @@ this section is the quick-reference version.
   account prefix** (e.g. `regency` / `rgcy`, not the usual
   `cpanelaccount_regency` form) — check the actual values in cPanel → MySQL
   Databases rather than assuming the prefixed convention.
+
+### Populating the database
+
+`php artisan migrate --force` only creates empty tables — it does not load
+any content. Pages, products, brands, posts and **menu items** (the header
+nav) all come from a separate one-time import:
+
+```bash
+cd ~/regency_app
+php artisan wp:import
+```
+
+This reads `database/wp-migration.sqlite` (committed to the repo, so it's
+already there after `git pull`) and is idempotent — safe to re-run any time,
+it matches existing rows by slug / `wp_post_id` rather than duplicating
+them. Skipping this step is exactly what an empty nav bar and 404s on
+`/about`, `/faqs`, etc. look like — the routes and views are fine, there's
+just nothing in the `pages`/`menu_items` tables for them to render.
 
 ### Standard deploy (code update)
 
@@ -108,7 +130,10 @@ then `php artisan view:clear`.
 - `grep regency_app ~/public_html/index.php` — must show the
   `../regency_app/...` bootstrap paths (confirms the production entry point
   is actually installed, not the stock one).
-- Load <https://regencyteas.com> — should render fully styled.
+- Load <https://regencyteas.com> — should render fully styled, with a
+  populated nav bar (see "Populating the database" above if it's empty).
+- Spot-check a couple of `Page`-backed routes too, e.g. `/about` and `/faqs`
+  — same underlying cause (missing `wp:import`) shows up as 404s there.
 - Check `~/regency_app/storage/logs/laravel.log` for errors.
 - **Never leave `APP_DEBUG=true` in production.**
 

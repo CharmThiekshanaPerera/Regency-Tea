@@ -51,18 +51,31 @@ php artisan media:bundle --manifest
 ### 2. Upload
 
 ```bash
-scp storage/app/regency-media.tar.gz user@your-server:/tmp/
+scp -i <SSH_KEY> storage/app/regency-media.tar.gz <SSH_USER>@<SERVER_IP>:/tmp/
 ```
 
 ### 3. On the server
 
+On the GoDaddy shared-cPanel layout (see the root `README.md`), the app and
+the web docroot are **separate sibling folders** — `~/regency_app` and
+`~/public_html`. `Media::path()` resolves against the app's own
+`public_path()`, so the files need to exist under `~/regency_app/public/media`
+regardless; but browsers only ever reach `~/public_html`, so the extracted
+folder has to be copied there too:
+
 ```bash
-cd /path/to/site/public
+cd ~/regency_app/public
 tar -xzf /tmp/regency-media.tar.gz          # extracts into public/media/
-cd /path/to/site
+cd ~/regency_app
 php artisan media:verify                    # must report 0 missing
+cp -r ~/regency_app/public/media/. ~/public_html/media/
 rm /tmp/regency-media.tar.gz
 ```
+
+After this one-time bootstrap, `deploy/deploy.sh`'s existing
+`cp -r ~/regency_app/public/. ~/public_html/` step keeps `public_html/media`
+in sync automatically on every future deploy — no need to repeat the extra
+`cp` above unless you're uploading a fresh media bundle again.
 
 `media:verify` walks every product, gallery and post image reference in the database and checks the file exists. **If it reports 0 missing, images will render.**
 
