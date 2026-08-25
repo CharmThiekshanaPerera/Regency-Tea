@@ -21,8 +21,9 @@ class Product extends Model
     protected function casts(): array
     {
         return [
-            'gallery'      => 'array',
-            'published_at' => 'datetime',
+            'gallery'           => 'array',
+            'custom_attributes' => 'array',
+            'published_at'      => 'datetime',
         ];
     }
 

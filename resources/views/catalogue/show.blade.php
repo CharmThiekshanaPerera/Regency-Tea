@@ -173,7 +173,7 @@
                     </div>
                 @endif
 
-                @if ($product->custom_attributes)
+                @if (is_array($product->custom_attributes) && $product->custom_attributes)
                     <div x-show="tab === 'Specifications'" x-cloak>
                         <table class="w-full max-w-2xl text-sm">
                             <tbody class="divide-y divide-stone-200">
