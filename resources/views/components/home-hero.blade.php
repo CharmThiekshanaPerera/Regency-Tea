@@ -96,7 +96,12 @@ $slides = [
                 {{-- Text — each element flies in on its own delay whenever this slide becomes active,
                      and every time it cycles back around, like a PowerPoint staggered entrance. --}}
                 <div class="relative z-10 flex h-full items-center">
-                    <div class="max-w-md px-6 sm:px-10 lg:px-14" style="color: {{ $slide['case'] === 'sentence' ? '#2b2110' : '#ffffff' }}">
+                    {{-- px-16 (64px) at every breakpoint, not just mobile — the prev/next
+                         arrows sit at a fixed left-3/right-3 (~52px including their own
+                         width) regardless of viewport, so the safe clearance is a
+                         constant in pixels, not something that should shrink at sm/lg
+                         like the old px-6 sm:px-10 lg:px-14 did. --}}
+                    <div class="max-w-md px-16" style="color: {{ $slide['case'] === 'sentence' ? '#2b2110' : '#ffffff' }}">
                         {{-- Muted via colour alpha, not `opacity` — that CSS property is what the
                              enter/leave transition below animates, and a permanent opacity utility
                              on the same element would fight it for the whole time both are applied. --}}
@@ -106,7 +111,7 @@ $slides = [
                               x-transition:enter-end="opacity-100 translate-y-0"
                               x-transition:leave="transition ease-in duration-200"
                               x-transition:leave-end="opacity-0"
-                              class="inline-block text-xs font-semibold uppercase tracking-widest"
+                              class="inline-block text-sm font-semibold uppercase tracking-widest"
                               style="color: {{ $slide['case'] === 'sentence' ? '#2b2110cc' : '#ffffffcc' }}">
                             {{ $slide['brand'] }}
                         </span>
@@ -119,7 +124,7 @@ $slides = [
                             x-transition:leave-end="opacity-0"
                             @if ($slide['lang'] !== 'en') lang="{{ $slide['lang'] }}" @endif
                             @class([
-                                'mt-3 text-3xl sm:text-4xl leading-tight',
+                                'mt-3 text-4xl sm:text-5xl lg:text-6xl leading-tight',
                                 'uppercase tracking-tight' => $slide['case'] === 'uppercase',
                             ])
                             style="font-weight: {{ $slide['weight'] }}; {{ $slide['lang'] === 'si' ? "font-family: 'Noto Sans Sinhala', sans-serif;" : '' }}">
@@ -132,7 +137,7 @@ $slides = [
                            x-transition:enter-end="opacity-100 translate-y-0"
                            x-transition:leave="transition ease-in duration-200"
                            x-transition:leave-end="opacity-0"
-                           class="mt-4 max-w-xs text-sm sm:text-base"
+                           class="mt-4 max-w-xs text-base sm:text-lg"
                            style="color: {{ $slide['case'] === 'sentence' ? '#2b2110e6' : '#ffffffe6' }}">
                             {{ $slide['sub'] }}
                         </p>
@@ -144,7 +149,7 @@ $slides = [
                            x-transition:leave="transition ease-in duration-200"
                            x-transition:leave-end="opacity-0"
                            href="{{ $slide['cta']['url'] }}"
-                           class="mt-7 inline-block rounded-full px-6 py-3 text-sm font-semibold shadow-lg transition hover:-translate-y-0.5"
+                           class="mt-7 inline-block rounded-full px-6 py-3 text-base font-semibold shadow-lg transition hover:-translate-y-0.5"
                            style="background-color: {{ $slide['case'] === 'sentence' ? '#2b2110' : '#ffffff' }}; color: {{ $slide['case'] === 'sentence' ? '#ffffff' : $slide['color'] }}">
                             {{ $slide['cta']['label'] }}
                         </a>
