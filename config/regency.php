@@ -10,6 +10,18 @@ return [
 
     'enquiry_inbox' => env('ENQUIRY_INBOX', 'info@regencyteas.com'),
 
+    /*
+     | Google Tag Manager is the single injection point for analytics —
+     | GA4, conversion tracking, future pixels all get configured inside
+     | the GTM container itself, not hardcoded here. Blank in .env means
+     | the snippet doesn't render at all, so local/staging never sends
+     | real traffic data. google_site_verification is the <meta> tag
+     | Search Console gives you for the "HTML tag" ownership-verification
+     | method — paste just the content="..." value, not the whole tag.
+     */
+    'gtm_id'                    => env('GTM_ID'),
+    'google_site_verification'  => env('GOOGLE_SITE_VERIFICATION'),
+
     'company' => [
         'name'    => 'Regency Teas (PVT) LTD',
         'tagline' => 'Pure Ceylon Tea Exporter in Sri Lanka',
