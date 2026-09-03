@@ -17,14 +17,34 @@ class PageController extends Controller
     {
         $groups = ProductGroup::with('categories')->orderBy('sort')->get();
 
-        $groups->each(function (ProductGroup $group) {
-            $categoryIds = $group->categories->pluck('id');
+        // One query for every group's cover image instead of one query PER
+        // group (was 9 extra round trips on the home page alone). Pull every
+        // published product's image + category ids up front, newest first,
+        // then hand each group the first one whose categories intersect it.
+        $productsByCategory = Product::published()
+            ->whereNotNull('primary_image_path')
+            ->with('categories:id')
+            ->orderByDesc('published_at')
+            ->get(['id', 'primary_image_path', 'published_at'])
+            ->reduce(function (\Illuminate\Support\Collection $map, Product $product) {
+                foreach ($product->categories as $category) {
+                    // Newest-first order + has()-guarded put(): the first
+                    // (newest) product seen for a category wins, later
+                    // (older) ones are skipped rather than overwriting it.
+                    if (! $map->has($category->id)) {
+                        $map->put($category->id, $product->primary_image_path);
+                    }
+                }
 
-            $group->cover_image = Product::published()
-                ->whereNotNull('primary_image_path')
-                ->whereHas('categories', fn ($q) => $q->whereIn('categories.id', $categoryIds))
-                ->orderByDesc('published_at')
-                ->value('primary_image_path');
+                return $map;
+            }, collect());
+
+        $groups->each(function (ProductGroup $group) use ($productsByCategory) {
+            $group->cover_image = $group->categories
+                ->pluck('id')
+                ->map(fn ($id) => $productsByCategory->get($id))
+                ->filter()
+                ->first();
         });
 
         return view('pages.home', [
