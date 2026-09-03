@@ -23,3 +23,8 @@ yarn-error.log
 # Never commit the legacy backup or old DB credentials
 /_backup
 wp-config.php
+
+# Stray copy at the repo root — the repo root isn't served by the app at
+# all (Laravel's web root is /public), so this one does nothing. The real,
+# working copy that Google actually needs stays at /public/googleaeb2c150e29a1cd8.html.
+/googleaeb2c150e29a1cd8.html
