@@ -19,6 +19,7 @@ class CatalogueController extends Controller
             'groups' => ProductGroup::with([
                 'categories' => fn ($q) => $q->visible()->withCount('products'),
             ])->orderBy('sort')->get(),
+            'totalProducts' => Product::published()->count(),
         ]);
     }
 

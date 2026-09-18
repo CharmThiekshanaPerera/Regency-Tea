@@ -11,12 +11,20 @@
         <p class="mt-4 text-lg text-stone-600">
             Our complete Ceylon tea catalogue, organised by collection.
         </p>
+        <p class="mt-2 text-sm font-medium text-emerald-700">
+            {{ number_format($totalProducts) }} {{ Str::plural('product', $totalProducts) }}
+            across {{ $groups->count() }} {{ Str::plural('range', $groups->count()) }}
+        </p>
     </header>
 
     <div class="mt-14 space-y-16">
         @foreach ($groups as $group)
+            @php $groupCount = $group->categories->sum('products_count'); @endphp
             <section id="{{ $group->slug }}" class="scroll-mt-24">
-                <h2 class="text-2xl font-semibold">{{ $group->name }}</h2>
+                <div class="flex flex-wrap items-baseline justify-between gap-2">
+                    <h2 class="text-2xl font-semibold">{{ $group->name }}</h2>
+                    <span class="text-sm font-medium text-stone-500">{{ number_format($groupCount) }} {{ Str::plural('product', $groupCount) }}</span>
+                </div>
 
                 @if ($group->description)
                     <p class="mt-2 max-w-2xl text-stone-600">{{ $group->description }}</p>
