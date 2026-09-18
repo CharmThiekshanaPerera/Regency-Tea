@@ -334,7 +334,15 @@ class ImportWordPress extends Command
                     }
                 }
             }
-            $product->categories()->sync(array_unique($catIds));
+            // sync([]) detaches every category — correct on a first import when a
+            // product's WP terms genuinely resolve to nothing (e.g. all mapped
+            // through DROP_CATEGORIES to null), but destructive on a re-run: it
+            // would silently wipe out any categorisation added by hand in the
+            // admin panel since the last import. Only sync when there's actually
+            // something to assign; leave existing rows alone otherwise.
+            if ($catIds) {
+                $product->categories()->sync(array_unique($catIds));
+            }
             $product->attributeValues()->sync(array_unique($attrIds));
 
             $bar->advance();
@@ -441,12 +449,27 @@ class ImportWordPress extends Command
         ];
 
         foreach ($this->wp->query('SELECT * FROM wp_menu_items ORDER BY sort')->fetchAll() as $r) {
-            $url = $r['type'] === 'post_type' ? '/' : ($map[$r['url']] ?? $r['url']);
+            $url  = $r['type'] === 'post_type' ? '/' : ($map[$r['url']] ?? $r['url']);
+            $menu = $r['menu_slug'] === 'main-menu' ? 'main' : 'footer';
 
-            MenuItem::updateOrCreate(
-                ['menu' => $r['menu_slug'] === 'main-menu' ? 'main' : 'footer', 'label' => $r['label']],
-                ['url' => $url, 'sort' => (int) $r['sort']]
-            );
+            // label is a translatable JSON column ({"en": "Home"}), so it can't
+            // be matched via updateOrCreate's plain-value WHERE — that compares
+            // the raw SQL string against the whole JSON blob and never matches
+            // an existing row, creating a fresh duplicate on every re-run.
+            $menuItem = MenuItem::where('menu', $menu)
+                ->whereJsonContainsLocale('label', 'en', $r['label'])
+                ->first();
+
+            if ($menuItem) {
+                $menuItem->update(['url' => $url, 'sort' => (int) $r['sort']]);
+            } else {
+                MenuItem::create([
+                    'menu'  => $menu,
+                    'label' => $r['label'],
+                    'url'   => $url,
+                    'sort'  => (int) $r['sort'],
+                ]);
+            }
         }
     }
 
@@ -666,5 +689,37 @@ class ImportWordPress extends Command
         $priced = ProductVariant::whereNotNull('price_cents')->count();
         $this->warn("Variants with a price: {$priced} / ".ProductVariant::count()
             .'  — the WordPress export contains no pricing data (see PHASE2-MIGRATION-PLAN.md §0).');
+
+        $this->reportUncategorizedProducts();
+    }
+
+    /**
+     * A published product with zero category_product rows is invisible on
+     * every per-category range page — it only ever shows under "All Products"
+     * and search. That's exactly the failure mode the sync([]) guard above
+     * exists to prevent going forward, but it's cheap to also just check for
+     * it every run, in case a product's terms legitimately resolve to
+     * nothing from the source data itself.
+     */
+    private function reportUncategorizedProducts(): void
+    {
+        // pluck() reads the column directly, bypassing HasTranslations — with
+        // title/slug as plain strings that's fine, but title is a translatable
+        // JSON column, so pluck('title') would print the raw {"en":"..."}
+        // blob instead of the resolved string. get() + the model accessor
+        // avoids that.
+        $uncategorized = Product::published()
+            ->whereDoesntHave('categories')
+            ->get(['id', 'slug', 'title']);
+
+        if ($uncategorized->isEmpty()) {
+            return;
+        }
+
+        $this->newLine();
+        $this->error("{$uncategorized->count()} published product(s) have NO category — invisible on range pages:");
+        foreach ($uncategorized as $product) {
+            $this->line("  - {$product->title} ({$product->slug})");
+        }
     }
 }
