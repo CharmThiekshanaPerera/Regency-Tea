@@ -46,7 +46,7 @@
                 <ul class="mt-4 grid grid-cols-5 gap-3">
                     @foreach ($thumbs as $thumb)
                         <li>
-                            <button type="button" @click="active = '{{ $thumb }}'"
+                            <button type="button" @click="active = '{{ \App\Support\Media::url($thumb) }}'"
                                     class="block w-full overflow-hidden rounded-lg border border-stone-200 p-1 hover:border-emerald-600"
                                     :class="active === '{{ \App\Support\Media::url($thumb) }}' ? 'border-emerald-600 ring-1 ring-emerald-600' : ''"
                                     aria-label="View image {{ $loop->iteration }}">
