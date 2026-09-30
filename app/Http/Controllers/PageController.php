@@ -83,7 +83,6 @@ class PageController extends Controller
     {
         $files = [
             ['title' => 'Regency Teas — full catalogue', 'path' => '2026/01/RTC2026.pdf'],
-            ['title' => 'Hyleys catalogue',              'path' => '2024/09/RT-CAT-HY.pdf'],
         ];
 
         $catalogues = collect($files)

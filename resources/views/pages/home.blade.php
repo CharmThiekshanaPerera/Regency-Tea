@@ -47,10 +47,10 @@
     // populates that field (see ImportWordPress::importBrands()), so relying
     // on it silently degrades to a text-only fallback after every re-import.
     $brandMarks = [
-        'hyleys'       => 'images/curved-hero/marks/hyleys.png',
-        'lakma'        => 'images/curved-hero/marks/lakma.png',
-        'truly-ceylon' => 'images/curved-hero/marks/truly-ceylon.png',
-        'dr-tea'       => 'images/curved-hero/marks/dr-tea.png',
+        'hyleys'       => 'images/curved-hero/marks/hyleys.jpg',
+        'lakma'        => 'images/curved-hero/marks/lakma.jpg',
+        'truly-ceylon' => 'images/curved-hero/marks/truly-ceylon.jpg',
+        'dr-tea'       => 'images/curved-hero/marks/dr-tea-wellness.jpg',
     ];
 @endphp
 @if ($brands->isNotEmpty())
@@ -66,9 +66,9 @@
                 @if (isset($brandMarks[$brand->slug]))
                     <li style="--reveal-delay: {{ $i * 80 }}ms">
                         <a href="{{ route('brand.show', $brand) }}"
-                           class="group flex h-32 items-center justify-center rounded-2xl border border-stone-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-xl sm:h-40">
+                           class="group block aspect-square overflow-hidden rounded-2xl shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
                             <img src="{{ asset($brandMarks[$brand->slug]) }}" alt="{{ $brand->name }}"
-                                 class="max-h-full max-w-full object-contain transition duration-300 group-hover:scale-105">
+                                 class="h-full w-full object-cover transition duration-300 group-hover:scale-105">
                         </a>
                     </li>
                 @endif
