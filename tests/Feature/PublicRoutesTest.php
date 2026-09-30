@@ -20,6 +20,20 @@ class PublicRoutesTest extends TestCase
         $this->get('/')->assertOk();
     }
 
+    /**
+     * Regression test — two separate incidents of an editor saving a post/
+     * product and the public page not reflecting it without an incognito
+     * tab. No cache/CDN layer was found to be responsible, but public HTML
+     * must never be cacheable regardless, so this is asserted directly.
+     */
+    public function test_public_pages_are_never_cached(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertHeader('Pragma', 'no-cache');
+        $this->assertStringContainsString('no-store', $response->headers->get('Cache-Control'));
+    }
+
     public function test_catalogue_routes_load(): void
     {
         $brand    = Brand::create(['slug' => 'hyleys', 'name' => 'Hyleys']);

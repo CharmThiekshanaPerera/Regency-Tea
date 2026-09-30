@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\EnforceCanonicalHost;
 use App\Http\Middleware\HandleLegacyRedirects;
+use App\Http\Middleware\PreventPageCaching;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -22,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // array, and $request->session() isn't available yet at that point).
         $middleware->appendToGroup('web', SetLocale::class);
         $middleware->appendToGroup('web', HandleLegacyRedirects::class);
+        $middleware->appendToGroup('web', PreventPageCaching::class);
 
         $middleware->trustProxies(at: '*');
     })
